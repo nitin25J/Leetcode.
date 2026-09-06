@@ -1,16 +1,40 @@
-class Solution { 
-    public int maxSubArray(int[] nums) { 
- 
-        int currentSum = nums[0]; 
-        int maxSum = nums[0]; 
- 
-        for (int i = 1; i < nums.length; i++) { 
- 
-            currentSum = Math.max(nums[i], currentSum + nums[i]); 
- 
-            maxSum = Math.max(maxSum, currentSum); 
-        } 
- 
-        return maxSum; 
-    } 
+class Solution {
+    public int maxSubArray(int[] nums) {
+        return divide(nums, 0, nums.length - 1);
+    }
+
+    private int divide(int[] nums, int left, int right) {
+
+        if (left == right) {
+            return nums[left];
+        }
+
+        int mid = left + (right - left) / 2;
+
+        int leftSum = divide(nums, left, mid);
+        int rightSum = divide(nums, mid + 1, right);
+
+        int leftMax = Integer.MIN_VALUE;
+        int sum = 0;
+
+        for (int i = mid; i >= left; i--) {
+            sum += nums[i];
+            leftMax = Math.max(leftMax, sum);
+        }
+
+        int rightMax = Integer.MIN_VALUE;
+        sum = 0;
+
+        for (int i = mid + 1; i <= right; i++) {
+            sum += nums[i];
+            rightMax = Math.max(rightMax, sum);
+        }
+
+        int crossSum = leftMax + rightMax;
+
+        return Math.max(
+            Math.max(leftSum, rightSum),
+            crossSum
+        );
+    }
 }
